@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
   yesButton.addEventListener('focus', showQuietOption);
   yesButton.addEventListener('blur', startQuietOptionCountdown);
 
-  preloadFrames((loaded, total) => { status.textContent = `Preparing the surprise… ${loaded}/${total}`; }).then(() => {
+  preloadFrames((loaded, total) => { status.textContent = `Preparing the surprise… ${Math.min(loaded,30)}/${Math.min(total,30)}`; }).then(() => {
     loading = false;
     if (firstYesAccepted) leaveConsent(true);
     else if (noCount >= MINIMUM_NO_PROMPTS) showFinalConsent();
