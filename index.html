@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Sorting Hat's Secret</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Cinzel+Decorative:wght@700&family=IM+Fell+English:ital@0;1&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
+  <section id="audio-consent" aria-labelledby="consent-title">
+    <div class="consent-noise" aria-hidden="true"></div>
+    <div class="audio-consent-panel">
+      <p class="consent-kicker">The Castle Awakes</p>
+      <h1 id="consent-title">Dare break the silence?</h1>
+      <p id="audio-consent-message">Ancient magic speaks louder in the dark.</p>
+      <p id="loading-status" class="loading-status" aria-live="polite">Summoning the magic…</p>
+      <div class="audio-consent-actions">
+        <button id="consent-continue" type="button">LUMOS (AUDIO ON)</button>
+        <button id="audio-no" type="button">Nox (Keep silent)</button>
+      </div>
+    </div>
+  </section>
+  <div class="snitch-wrapper" id="snitch-wrapper" aria-hidden="true">
+    <div class="snitch">
+      <div class="obj">
+        <div class="body">
+          <div class="flourish"></div>
+          <div class="flourish"></div>
+          <div class="flourish"></div>
+          <div class="flourish">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+          <div class="flourish">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+        </div>
+        <div class="l joint"></div>
+        <div class="l wing">
+          <div class="feather"></div>
+          <div class="feather"></div>
+          <div class="feather"></div>
+        </div>
+        <div class="r joint"></div>
+        <div class="r wing">
+          <div class="feather"></div>
+          <div class="feather"></div>
+          <div class="feather"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <main class="sorting-hat">
+    <div class="scene">
+      <div id="hat-container" role="button" tabindex="0" aria-label="Start the Sorting Hat surprise">
+        <img id="hat-frame" src="scene/1.png" alt="The Sorting Hat">
+        <div id="speech-bubble" class="speech-bubble" aria-live="polite">
+          <p id="dialogue-text">Click to start</p>
+        </div>
+        <div id="final-card" class="hidden" role="button" tabindex="0"
+          aria-label="Birthday paper note. Activate to turn it over.">
+          <span class="note-inner">
+            <span class="note-face note-front">
+              <!-- <span class="eerie-code">404</span>
+              <span class="eerie-sub">YOUTH NOT FOUND</span> -->
+            </span>
+            <span class="note-face note-back">
+              <span class="bday-text">HAPPY BIRTHDAY PARTHIV!</span>
+              <button id="birthday-action" class="birthday-action" type="button">
+                Send birthday email
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Ordered classic scripts deliberately support direct file:// previews. -->
+  <script defer src="config.js"></script>
+  <script defer src="assets.js"></script>
+  <script defer src="audio-state.js"></script>
+  <script defer src="final-reveal.js"></script>
+  <script defer src="hat.js"></script>
+  <script defer src="snitch.js"></script>
+  <script defer src="fireworks.js"></script>
+  <script defer src="app.js"></script>
+</body>
+
+</html>
