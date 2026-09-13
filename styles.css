@@ -373,9 +373,9 @@ body {
   pointer-events: none;
   cursor: pointer;
   transition:
-    opacity 1.35s ease,
-    transform 1.35s cubic-bezier(.2, .75, .25, 1),
-    filter 1.35s ease;
+    opacity .7s ease,
+    transform .7s cubic-bezier(.2, .75, .25, 1),
+    filter .7s ease;
 }
 
 #final-card.visible {
@@ -448,9 +448,9 @@ body {
   filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.85));
   font-family: "MedievalSharp", "Cinzel Decorative", Georgia, serif;
   transition:
-    opacity 2.4s ease,
-    transform 2.4s cubic-bezier(.2, .75, .25, 1),
-    filter 2.4s ease;
+    opacity 1.2s ease,
+    transform 1.2s cubic-bezier(.2, .75, .25, 1),
+    filter 1.2s ease;
   will-change: opacity, transform, filter;
 }
 
@@ -475,9 +475,9 @@ body {
   backface-visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 2.4s ease,
-    transform 2.4s cubic-bezier(.2, .75, .25, 1),
-    filter 2.4s ease;
+    opacity 1.2s ease,
+    transform 1.2s cubic-bezier(.2, .75, .25, 1),
+    filter 1.2s ease;
   will-change: opacity, transform, filter;
 }
 
@@ -562,7 +562,23 @@ body {
   background-image: var(--paper-image-back);
   text-align: center;
   padding: 40px 30px;
-  transform: rotateY(180deg);
+  visibility: hidden;
+  opacity: 0;
+  transform: none;
+  pointer-events: none;
+  transition: opacity .55s ease, filter .55s ease;
+}
+
+#final-card.birthday-visible .note-back {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#final-card.revealed .note-back {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 #final-card.revealed .note-inner::before,
@@ -570,8 +586,10 @@ body {
   animation: reveal-magic 7.7s ease-out forwards;
 }
 
-#final-card.flipped .note-inner::before,
-#final-card.flipped .note-inner::after {
+#final-card.birthday-visible .note-inner::before,
+#final-card.birthday-visible .note-inner::after,
+#final-card.revealed .note-inner::before,
+#final-card.revealed .note-inner::after {
   opacity: 0;
   animation: none;
 }
