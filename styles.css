@@ -1,23 +1,44 @@
 :root {
   color-scheme: dark;
+  --app-height: 100vh;
+}
+
+@supports (height: 100svh) {
+  :root {
+    --app-height: 100svh;
+  }
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --app-height: 100dvh;
+  }
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+  background: #030405;
+}
+
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: var(--app-height);
   overflow: hidden;
   background: #030405;
   color: #c6c3ba;
   font-family: "Cinzel Decorative", serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
 }
 
 .sorting-hat {
   width: 100%;
-  height: 100vh;
+  height: var(--app-height);
+  min-height: var(--app-height);
   position: relative;
 }
 
@@ -38,6 +59,7 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  touch-action: manipulation;
   animation: float 3s ease-in-out infinite alternate;
   outline: none;
 }
@@ -52,7 +74,8 @@ body {
   height: auto;
   display: block;
   filter: drop-shadow(0 10px 20px #000);
-  transition: opacity 1s ease;
+  will-change: opacity;
+  transition: opacity 1.1s cubic-bezier(.22, .61, .36, 1);
 }
 
 #hat-frame.final-fade-out {
@@ -80,9 +103,11 @@ body {
   text-align: center;
   filter: drop-shadow(0 0 4px #9a742d) drop-shadow(0 0 15px #6a4b1688);
   box-shadow: 0 0 12px rgba(175, 139, 32, 0.3), inset 0 1px rgba(226, 189, 86, 0.2);
-  transition: opacity .25s ease, transform .35s cubic-bezier(0.2, 0.8, 0.2, 1), top .35s cubic-bezier(0.2, 0.8, 0.2, 1), left .35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity .25s ease, transform .35s cubic-bezier(0.2, 0.8, 0.2, 1), top .35s cubic-bezier(0.2, 0.8, 0.2, 1), bottom .35s cubic-bezier(0.2, 0.8, 0.2, 1), left .35s cubic-bezier(0.2, 0.8, 0.2, 1);
   z-index: 20;
   white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Pointer arrow pointing UP at the hat before start */
@@ -135,7 +160,7 @@ body {
   z-index: 100;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: calc(24px + env(safe-area-inset-top)) calc(24px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(24px + env(safe-area-inset-left));
   background: radial-gradient(ellipse at 50% 44%, #18191e 0%, #0a0b0e 45%, #020203 85%, #000 100%);
   transition: opacity .8s ease, visibility .8s ease;
   isolation: isolate;
@@ -335,26 +360,33 @@ body {
   left: 50%;
   z-index: 30;
   /* Scene 27 is 1024x1536 and scene 28 is 408x612: both are 2:3. */
-  width: min(408px, 82vw, calc((100vh - 40px) * .666667));
+  width: min(360px, 78vw, calc((100vh - 48px) * .666667));
   aspect-ratio: 2 / 3;
   transform: translate(-50%, -50%);
   border: 0;
   padding: 0;
   background: none;
   perspective: 1200px;
-  cursor: pointer;
+  will-change: opacity, transform;
   opacity: 0;
+  filter: blur(5px);
   pointer-events: none;
-  transition: opacity .85s ease;
+  cursor: pointer;
+  transition:
+    opacity 1.35s ease,
+    transform 1.35s cubic-bezier(.2, .75, .25, 1),
+    filter 1.35s ease;
 }
 
 #final-card.visible {
   opacity: 1;
+  filter: none;
   pointer-events: auto;
 }
 
 #final-card.fading {
   opacity: 0;
+  transform: translate(-50%, -50%) scale(.985);
   pointer-events: none;
 }
 
@@ -364,12 +396,39 @@ body {
   width: 100%;
   height: 100%;
   aspect-ratio: 2 / 3;
+  overflow: visible;
+  isolation: isolate;
   transform-style: preserve-3d;
-  transition: transform .8s cubic-bezier(.2, .75, .25, 1);
+  transition: transform 1.05s cubic-bezier(.22, .61, .36, 1);
 }
 
-#final-card.flipped .note-inner {
-  transform: rotateY(180deg);
+.note-inner::before,
+.note-inner::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+}
+
+.note-inner::before {
+  background: radial-gradient(circle, rgba(255, 237, 164, .82) 0, rgba(255, 198, 67, .24) 32%, transparent 72%);
+  filter: blur(20px);
+  transform: scale(.5);
+}
+
+.note-inner::after {
+  inset: -8%;
+  background:
+    radial-gradient(circle at 22% 28%, rgba(255, 245, 185, .95) 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 36%, rgba(255, 220, 113, .9) 0 1px, transparent 2px),
+    radial-gradient(circle at 31% 77%, rgba(255, 245, 185, .9) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 83%, rgba(255, 220, 113, .85) 0 1px, transparent 2px);
+  background-size: 100% 100%;
+  filter: blur(.2px) drop-shadow(0 0 8px rgba(255, 199, 70, .9));
+  transform: scale(.8);
 }
 
 .note-face {
@@ -388,11 +447,83 @@ body {
   color: #24170d;
   filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.85));
   font-family: "MedievalSharp", "Cinzel Decorative", Georgia, serif;
+  transition:
+    opacity 2.4s ease,
+    transform 2.4s cubic-bezier(.2, .75, .25, 1),
+    filter 2.4s ease;
+  will-change: opacity, transform, filter;
 }
 
 .note-front {
-  background-image: var(--paper-image-front);
+  z-index: 1;
+  display: block;
+  background-image: none;
   text-align: center;
+  opacity: 1;
+  transform: rotateY(0deg);
+  filter: none;
+}
+
+.note-front::before,
+.note-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  backface-visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 2.4s ease,
+    transform 2.4s cubic-bezier(.2, .75, .25, 1),
+    filter 2.4s ease;
+  will-change: opacity, transform, filter;
+}
+
+.note-front::before {
+  z-index: 0;
+  background-image: var(--paper-image-blank);
+  opacity: 1;
+  transform: scale(1);
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, .75));
+}
+
+.note-front::after {
+  z-index: 1;
+  background-image: var(--paper-image-reveal);
+  opacity: 0;
+  transform: scale(.94);
+  filter: blur(13px) brightness(1.35) drop-shadow(0 0 0 rgba(255, 207, 92, 0));
+}
+
+#final-card.revealed .note-front::before {
+  opacity: .12;
+  transform: scale(1.025);
+  filter: blur(4px) brightness(1.18);
+}
+
+#final-card.revealed .note-front::after {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0) brightness(1) drop-shadow(0 14px 28px rgba(0, 0, 0, .75));
+}
+
+#final-card.flipped .note-inner {
+  transform: none;
+}
+
+#final-card.flipped .note-front {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#final-card.flipped .note-back {
+  z-index: 3;
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
 }
 
 .note-front .eerie-code {
@@ -427,10 +558,38 @@ body {
 }
 
 .note-back {
+  z-index: 2;
   background-image: var(--paper-image-back);
-  transform: rotateY(180deg);
   text-align: center;
   padding: 40px 30px;
+  transform: rotateY(180deg);
+}
+
+#final-card.revealed .note-inner::before,
+#final-card.revealed .note-inner::after {
+  animation: reveal-magic 7.7s ease-out forwards;
+}
+
+#final-card.flipped .note-inner::before,
+#final-card.flipped .note-inner::after {
+  opacity: 0;
+  animation: none;
+}
+
+@keyframes reveal-magic {
+  0% {
+    opacity: 0;
+    transform: scale(.55) rotate(-8deg);
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.2) rotate(8deg);
+  }
 }
 
 .note-back .bday-text {
@@ -684,6 +843,7 @@ body {
 @media (max-width: 700px) {
   .scene {
     width: 100%;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
   }
 
   #hat-container {
@@ -691,37 +851,40 @@ body {
   }
 
   #hat-frame {
-    width: min(78vw, 44vh);
-    max-height: 52vh;
+    width: min(78vw, calc(var(--app-height) * .44));
+    max-height: calc(var(--app-height) * .52);
     object-fit: contain;
   }
 
   .speech-bubble {
     left: 50%;
-    top: 100%;
+    top: auto;
+    bottom: 100%;
     max-width: calc(100vw - 24px);
     min-width: 0;
     padding: 11px 16px;
     transform: translateX(-50%);
-    margin-top: 12px;
+    margin: 0 0 12px;
     white-space: normal;
   }
 
   #hat-container.started .speech-bubble {
     left: 50%;
-    top: 100%;
+    top: auto;
+    bottom: 100%;
     transform: translateX(-50%);
-    margin-top: 12px;
+    margin: 0 0 12px;
   }
 
   .speech-bubble::before,
   #hat-container.started .speech-bubble::before {
-    top: -14px;
+    top: auto;
+    bottom: -14px;
     left: 50%;
     transform: translateX(-50%);
     border: 0;
     border-inline: 8px solid transparent;
-    border-bottom: 14px solid #11100e;
+    border-top: 14px solid #11100e;
   }
 
   .speech-bubble p {
@@ -732,9 +895,9 @@ body {
   .audio-consent-panel {
     width: min(520px, calc(100vw - 24px));
     min-height: 0;
-    max-height: calc(100vh - 24px);
-    max-height: calc(100dvh - 24px);
+    max-height: calc(var(--app-height) - 24px);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: clamp(24px, 7vw, 40px) clamp(18px, 6vw, 32px);
   }
 
@@ -758,9 +921,13 @@ body {
     padding: 13px 16px;
   }
 
+  .audio-consent-actions button {
+    touch-action: manipulation;
+  }
+
   #final-card {
     top: 50%;
-    width: min(408px, 84vw, calc((100dvh - 48px) * .666667));
+    width: min(360px, 78vw, calc((var(--app-height) - 48px) * .666667));
   }
 
   .note-face {
@@ -792,12 +959,12 @@ body {
   }
 
   #hat-frame {
-    width: min(42vh, 280px);
-    max-height: 62vh;
+    width: min(calc(var(--app-height) * .42), 280px);
+    max-height: calc(var(--app-height) * .62);
   }
 
   #final-card {
-    width: min(408px, 72vw, calc((100dvh - 32px) * .666667));
+    width: min(360px, 66vw, calc((var(--app-height) - 32px) * .666667));
   }
 
   .audio-consent-panel {

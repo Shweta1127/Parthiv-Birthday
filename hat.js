@@ -13,7 +13,7 @@ class HatSequence {
     this.started = false;
 
     if (this.dialogue) {
-      this.dialogue.textContent = 'Click to start';
+      this.dialogue.textContent = 'Click for Surprise';
       this.bubble.classList.remove('hidden');
     }
 
@@ -38,14 +38,20 @@ class HatSequence {
       }
       if (step.text) { this.dialogue.textContent = step.text; this.bubble.classList.remove('hidden'); }
       else this.bubble.classList.add('hidden');
-      for (const frame of step.frames) { this.frame.src = CONFIG.getSceneUrl(frame.id); await wait(frame.delay); }
+      for (const frame of step.frames) {
+        this.frame.src = CONFIG.getSceneUrl(frame.id);
+        await wait(frame.delay);
+      }
       // If this step requests it, wait until its audio track naturally ends (15 s safety cap).
       if (step.waitForAudio && this.onStepAudioEnd) {
         await this.onStepAudioEnd(i);
       }
     }
     this.bubble.classList.add('hidden');
-    this.onComplete();
+    const completion = this.onComplete ? this.onComplete() : null;
+    if (completion && typeof completion.then === 'function') {
+      await completion;
+    }
     this.frame.classList.add('final-fade-out');
     await wait(1050);
     this.frame.style.visibility = 'hidden';
