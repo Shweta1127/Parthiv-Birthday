@@ -58,7 +58,7 @@ class FinalReveal {
     // Scene 28 is revealed only when the birthday button is clicked.
     this.flipTimer = setTimeout(() => {
       this.showBirthdayMessage();
-    }, 2600);
+    }, 350);
   }
 
   showBirthdayMessage() {
